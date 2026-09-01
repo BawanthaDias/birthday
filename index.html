@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, John!</title>
+
+<!-- CDN: Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- CDN: Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<style>
+  :root{
+    --navy: #171233;
+    --navy-deep: #0d0a1f;
+    --gold: #ffc857;
+    --pink: #ff6f9c;
+    --lavender: #b9a4ff;
+    --cream: #fff6e9;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    height:100%;
+    background: radial-gradient(ellipse at top, var(--navy) 0%, var(--navy-deep) 70%);
+    font-family: 'Quicksand', sans-serif;
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* ---------- Starfield ---------- */
+  .stars{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 70% 60%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 40% 80%, #fff, transparent),
+      radial-gradient(2px 2px at 85% 20%, #fff, transparent),
+      radial-gradient(1px 1px at 55% 45%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 10% 65%, #fff, transparent),
+      radial-gradient(1px 1px at 90% 85%, #fff, transparent);
+    background-size: 100% 100%;
+    opacity: 0.55;
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{ from{opacity:.35;} to{opacity:.7;} }
+
+  /* ---------- Layout ---------- */
+  .wrap{
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 5vh 24px 12vh;
+    text-align: center;
+  }
+
+  .eyebrow-name{
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--lavender);
+    font-size: 1.1rem;
+    margin: 0 0 6px;
+  }
+
+  h1{
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 8vw, 4.6rem);
+    line-height: 1.05;
+    margin: 0 0 18px;
+    color: var(--cream);
+  }
+  h1 span{ color: var(--gold); }
+
+  .sub{
+    font-size: 1.15rem;
+    color: #d9d2f5;
+    max-width: 480px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+  }
+
+  /* ---------- Cake scene ---------- */
+  .scene{
+    position: relative;
+    width: min(320px, 80vw);
+    margin: 0 auto 36px;
+  }
+
+  .plate{
+    width: 100%;
+    height: 22px;
+    background: linear-gradient(180deg, #3a2f66, #241b47);
+    border-radius: 50%;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+  }
+
+  .cake{
+    position: relative;
+    margin: 0 auto;
+    width: 78%;
+    transform: translateY(-4px);
+  }
+
+  .tier{
+    border-radius: 10px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .tier.bottom{
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(180deg, #ff8fb3, var(--pink));
+    box-shadow: inset 0 -8px 0 rgba(0,0,0,0.12);
+  }
+  .tier.top{
+    width: 66%;
+    height: 46px;
+    background: linear-gradient(180deg, #ffe08a, var(--gold));
+    box-shadow: inset 0 -6px 0 rgba(0,0,0,0.12);
+    margin-top: -6px;
+  }
+  .drip{
+    position:absolute;
+    top:-10px; left:0; right:0;
+    height: 20px;
+    background: repeating-radial-gradient(circle at 10px 0, var(--lavender) 0 6px, transparent 7px) ;
+    background-size: 20px 20px;
+    background-repeat: repeat-x;
+  }
+
+  .candles{
+    position: absolute;
+    top: -78px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 22px;
+  }
+
+  .candle{
+    position: relative;
+    width: 8px;
+    height: 46px;
+    background: linear-gradient(180deg, #fff, #f1e3ff);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .candle::after{
+    content:'';
+    position:absolute;
+    top:-16px; left:50%;
+    transform: translateX(-50%);
+    width: 12px; height: 20px;
+    background: radial-gradient(circle at 50% 30%, #fff6c8, var(--gold) 60%, #ff9d3d 100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: 0 0 14px 4px rgba(255,200,87,0.65);
+    animation: flicker 0.7s ease-in-out infinite alternate;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .candle.out::after{
+    opacity: 0;
+    transform: translateX(-50%) scale(0.4);
+    animation: none;
+    box-shadow: none;
+  }
+  .candle.out::before{
+    content:'';
+    position:absolute;
+    top:-20px; left:50%;
+    transform: translateX(-50%);
+    width: 3px; height: 10px;
+    background: #9c96a8;
+    border-radius: 2px;
+    opacity: 0.6;
+  }
+  @keyframes flicker{
+    from{ transform: translateX(-50%) scale(1) rotate(-2deg); }
+    to{ transform: translateX(-50%) scale(1.08) rotate(2deg); }
+  }
+
+  .hint{
+    font-size: 0.9rem;
+    color: var(--lavender);
+    margin-top: 54px;
+    opacity: 0.85;
+  }
+
+  /* ---------- Message reveal ---------- */
+  .message{
+    margin-top: 34px;
+    padding: 28px 26px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,200,87,0.25);
+    backdrop-filter: blur(6px);
+    display: none;
+  }
+  .message.show{ display: block; }
+
+  .message h2{
+    font-family: 'Fredoka', sans-serif;
+    color: var(--gold);
+    font-size: 1.6rem;
+    margin: 0 0 12px;
+  }
+  .message p{
+    line-height: 1.7;
+    color: #eee7ff;
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  /* ---------- Balloons ---------- */
+  .balloons{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .balloon{
+    position: absolute;
+    bottom: -140px;
+    width: 46px;
+    height: 58px;
+    border-radius: 50% 50% 48% 48%;
+    opacity: 0.85;
+    animation-name: floatUp;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  .balloon::after{
+    content:'';
+    position:absolute;
+    bottom:-24px; left:50%;
+    width:1px; height:24px;
+    background: rgba(255,255,255,0.35);
+  }
+  @keyframes floatUp{
+    from{ transform: translateY(0) translateX(0) rotate(-4deg); }
+    50%{ transform: translateY(-55vh) translateX(30px) rotate(4deg); }
+    to{ transform: translateY(-115vh) translateX(-10px) rotate(-4deg); }
+  }
+
+  footer{
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #8f86b8;
+    padding-bottom: 30px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="balloons" id="balloons"></div>
+
+<div class="wrap">
+  <p class="eyebrow-name animate__animated animate__fadeInDown">for John</p>
+  <h1 class="animate__animated animate__fadeInDown">Happy Birthday,<br><span>John!</span></h1>
+  <p class="sub animate__animated animate__fadeIn animate__delay-1s">
+    One candle at a time. Blow out all three to unlock your surprise.
+  </p>
+
+  <div class="scene animate__animated animate__zoomIn animate__delay-1s">
+    <div class="candles" id="candles">
+      <div class="candle" data-index="0"></div>
+      <div class="candle" data-index="1"></div>
+      <div class="candle" data-index="2"></div>
+    </div>
+    <div class="cake">
+      <div class="drip"></div>
+      <div class="tier top"></div>
+      <div class="tier bottom"></div>
+    </div>
+    <div class="plate"></div>
+  </div>
+
+  <p class="hint" id="hint">Tap each candle to blow it out 🕯️</p>
+
+  <div class="message" id="message">
+    <h2>Make a wish, John!</h2>
+    <p>
+      Another year in, and somehow you keep making it look easy — the terrible jokes,
+      the good advice, the showing up when it counts. Here's to the year ahead being
+      louder, brighter, and full of exactly the kind of trouble you like best.
+      Happy birthday!
+    </p>
+  </div>
+</div>
+
+<footer>made with a little bit of glitter ✨</footer>
+
+<!-- CDN: canvas-confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script>
+  // Floating balloons
+  const balloonColors = ['#ff6f9c', '#ffc857', '#b9a4ff', '#7fe0c9'];
+  const balloonHost = document.getElementById('balloons');
+  const BALLOON_COUNT = 9;
+
+  for(let i = 0; i < BALLOON_COUNT; i++){
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    const color = balloonColors[i % balloonColors.length];
+    b.style.background = `radial-gradient(circle at 35% 30%, ${color}dd, ${color})`;
+    b.style.left = (Math.random() * 96) + 'vw';
+    const duration = 12 + Math.random() * 8;
+    b.style.animationDuration = duration + 's';
+    b.style.animationDelay = (Math.random() * duration) + 's';
+    b.style.width = (36 + Math.random() * 18) + 'px';
+    b.style.height = (46 + Math.random() * 22) + 'px';
+    balloonHost.appendChild(b);
+  }
+
+  // Candle blowing interaction
+  const candles = document.querySelectorAll('.candle');
+  const hint = document.getElementById('hint');
+  const messageBox = document.getElementById('message');
+  let blownOut = 0;
+
+  candles.forEach(candle => {
+    candle.addEventListener('click', () => {
+      if(candle.classList.contains('out')) return;
+      candle.classList.add('out');
+      blownOut++;
+
+      if(blownOut < candles.length){
+        hint.textContent = `${candles.length - blownOut} candle${candles.length - blownOut > 1 ? 's' : ''} left...`;
+      } else {
+        hint.textContent = 'Wish made. 🎉';
+        revealSurprise();
+      }
+    });
+  });
+
+  function revealSurprise(){
+    messageBox.classList.add('show', 'animate__animated', 'animate__fadeInUp');
+
+    const duration = 2.2 * 1000;
+    const end = Date.now() + duration;
+    const colors = ['#ff6f9c', '#ffc857', '#b9a4ff', '#7fe0c9', '#ffffff'];
+
+    (function frame(){
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 65,
+        origin: { x: 0, y: 0.7 },
+        colors
+      });
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 65,
+        origin: { x: 1, y: 0.7 },
+        colors
+      });
+      if(Date.now() < end){
+        requestAnimationFrame(frame);
+      }
+    })();
+
+    confetti({
+      particleCount: 140,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors
+    });
+  }
+</script>
+
+</body>
+</html>
