@@ -42,14 +42,13 @@ html, body{
   margin: 0;
   padding: 0;
   width: 100%;
-  overflow-x: hidden;
+  height: 100%;
+  overflow: hidden;
   background: var(--bg-gradient);
   color: var(--white);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
-
-body{ min-height: 100vh; }
 
 h1, h2, h3{
   font-family: var(--font-display);
@@ -253,6 +252,7 @@ button{ font-family: var(--font-body); cursor: pointer; }
   overflow-y: auto;
 }
 .scene.active{ display: flex; }
+.scene{ -webkit-overflow-scrolling: touch; }
 
 .scene-inner{ max-width: 640px; width: 100%; }
 .scene-inner--wide{ max-width: 980px; }

@@ -107,6 +107,51 @@ function startCursorTrail() {
 /* ---------------------------------------------------------------
    2. THREE.JS STARFIELD BACKGROUND
 ------------------------------------------------------------------ */
+// Generates a soft circular glow sprite on a canvas so THREE.Points render
+// as round glowing dots instead of the default flat squares.
+function makeStarTexture() {
+  const size = 64;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  gradient.addColorStop(0, 'rgba(255,255,255,1)');
+  gradient.addColorStop(0.25, 'rgba(255,255,255,0.9)');
+  gradient.addColorStop(0.6, 'rgba(255,255,255,0.25)');
+  gradient.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function makeStarLayer(count, options) {
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    positions[i * 3] = randomBetween(-140, 140);
+    positions[i * 3 + 1] = randomBetween(-90, 90);
+    positions[i * 3 + 2] = randomBetween(-120, 20);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const material = new THREE.PointsMaterial({
+    color: options.color,
+    size: options.size,
+    map: options.texture,
+    transparent: true,
+    opacity: options.opacity,
+    alphaTest: 0.01,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    sizeAttenuation: true
+  });
+
+  return new THREE.Points(geometry, material);
+}
+
 function initStarfield() {
   const canvas = $('#bg-canvas');
   if (!window.THREE || !canvas) return;
@@ -119,25 +164,16 @@ function initStarfield() {
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 60;
 
+  const starTexture = makeStarTexture();
   const starCount = isMobile ? 500 : 1400;
-  const positions = new Float32Array(starCount * 3);
-  for (let i = 0; i < starCount; i++) {
-    positions[i * 3] = randomBetween(-140, 140);
-    positions[i * 3 + 1] = randomBetween(-90, 90);
-    positions[i * 3 + 2] = randomBetween(-120, 20);
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-  const material = new THREE.PointsMaterial({
-    color: 0xd9c6ff,
-    size: 0.7,
-    transparent: true,
-    opacity: 0.85
-  });
+  // Two layers give a subtle sense of depth: a dim lavender field and a
+  // sparser, brighter gold layer that reads as "highlight" stars.
+  const stars = makeStarLayer(starCount, { color: 0xd9c6ff, size: 2.2, opacity: 0.6, texture: starTexture });
+  const highlightStars = makeStarLayer(Math.round(starCount * 0.15), { color: 0xffd782, size: 3, opacity: 0.85, texture: starTexture });
 
-  const stars = new THREE.Points(geometry, material);
   scene.add(stars);
+  scene.add(highlightStars);
 
   let mouseX = 0, mouseY = 0;
   if (!isMobile) {
@@ -149,8 +185,12 @@ function initStarfield() {
 
   function animate() {
     requestAnimationFrame(animate);
-    stars.rotation.y += prefersReducedMotion ? 0 : 0.0006;
-    stars.rotation.x += prefersReducedMotion ? 0 : 0.0002;
+    const spinY = prefersReducedMotion ? 0 : 0.0006;
+    const spinX = prefersReducedMotion ? 0 : 0.0002;
+    stars.rotation.y += spinY;
+    stars.rotation.x += spinX;
+    highlightStars.rotation.y += spinY * 0.7;
+    highlightStars.rotation.x += spinX * 0.7;
     camera.position.x += (mouseX - camera.position.x) * 0.02;
     camera.position.y += (-mouseY - camera.position.y) * 0.02;
     camera.lookAt(scene.position);
